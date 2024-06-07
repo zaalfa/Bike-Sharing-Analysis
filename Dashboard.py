@@ -89,6 +89,6 @@ fig_weather = px.bar(weather_counts, x='weathersit', y='cnt', title='Relationshi
 fig_weather.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 
 max_value_index_season = weather_counts['cnt'].idxmax()
-fig_weather.data[0].marker.color[max_value_index] = 'rgba(255, 0, 0, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.5)' for i in range(len(weather_counts))]
+fig_weather.data[0].marker.color = ['rgba(255, 0, 0, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.5)' for i in range(len(weather_counts))]
 
 st.plotly_chart(fig_weather)
