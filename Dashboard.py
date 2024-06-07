@@ -41,7 +41,7 @@ fig_yearly = px.bar(yearly_cnt, x='yr', y='cnt', title='Distribution of Bike Ren
 fig_yearly.update_xaxes(tickvals=[0, 1], ticktext=['2011', '2012'])
 
 max_value_index = yearly_cnt['cnt'].idxmax()
-fig_yearly.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_yearly else 'rgba(0, 0, 255, 0.5)' for i in range(len(yearly_cnt))]
+fig_yearly.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index else 'rgba(0, 0, 255, 0.5)' for i in range(len(yearly_cnt))]
 
 st.plotly_chart(fig_yearly)
 
@@ -88,7 +88,7 @@ weather_counts = hour_df.groupby('weathersit')['cnt'].sum().reset_index()
 fig_weather = px.bar(weather_counts, x='weathersit', y='cnt', title='Relationship between Rental Counts and Weather Condition', labels={'cnt': 'Total Rentals', 'weathersit': 'Weather Condition'})
 fig_weather.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 
-max_value_index = weather_counts['cnt'].idxmax()
-fig_weather.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_weather else 'rgba(0, 0, 255, 0.5)' for i in range(len(weather_counts))]
+max_value_index_season = weather_counts['cnt'].idxmax()
+fig_weather.data[0].marker.color[max_value_index] = 'rgba(255, 0, 0, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.5)' for i in range(len(weather_counts))]
 
 st.plotly_chart(fig_weather)
