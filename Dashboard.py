@@ -41,7 +41,7 @@ fig_yearly = px.bar(yearly_cnt, x='yr', y='cnt', title='Distribution of Bike Ren
 fig_yearly.update_xaxes(tickvals=[0, 1], ticktext=['2011', '2012'])
 
 max_value_index = yearly_cnt['cnt'].idxmax()
-fig_yearly.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index else 'rgba(0, 0, 255, 0.7)' for i in range(len(yearly_cnt))]
+fig_yearly.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index else 'rgba(0, 0, 255, 0.6)' for i in range(len(yearly_cnt))]
 
 st.plotly_chart(fig_yearly)
 
@@ -53,8 +53,7 @@ fig_seasonal = px.bar(season_cnt, x='season', y='cnt', title='Distribution of Bi
 fig_seasonal.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Spring', 'Summer', 'Fall', 'Winter'])
 
 max_value_index_season = season_cnt['cnt'].idxmax()
-fig_seasonal.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.7)' for i in range(len(season_cnt))]
-st.plotly_chart(fig_seasonal)
+fig_seasonal.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.6)' for i in range(len(season_cnt))]
 
 st.plotly_chart(fig_seasonal)
 
@@ -89,6 +88,6 @@ fig_weather = px.bar(weather_counts, x='weathersit', y='cnt', title='Relationshi
 fig_weather.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 
 max_value_index_season = weather_counts['cnt'].idxmax()
-fig_weather.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.7)' for i in range(len(weather_counts))]
+fig_weather.data[0].marker.color = ['rgba(0, 0, 255, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.6)' for i in range(len(weather_counts))]
 
 st.plotly_chart(fig_weather)
