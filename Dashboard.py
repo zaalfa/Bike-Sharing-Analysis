@@ -64,9 +64,10 @@ non_working_days_2011 = day_df_2011[day_df_2011['workingday'] == 0]
 rentals_working_days_2011 = working_days_2011.groupby('mnth')['cnt'].mean().reset_index()
 rentals_non_working_days_2011 = non_working_days_2011.groupby('mnth')['cnt'].mean().reset_index()
 
-fig_working = px.line(rentals_working_days_2011, x='mnth', y='cnt', title='Working Days vs Non-working Days (2011)', labels={'cnt': 'Average Rental Counts', 'mnth': 'Month'})
-fig_working.add_scatter(x=rentals_non_working_days_2011['mnth'], y=rentals_non_working_days_2011['cnt'], mode='lines', name='Non-working Days')
-fig_working.update_layout(xaxis_title='Month', yaxis_title='Average Rental Counts')
+fig_working = go.Figure()
+fig_working.add_trace(go.Scatter(x=rentals_working_days_2011['mnth'], y=rentals_working_days_2011['cnt'], mode='lines+markers', name='Working Days', line=dict(color='blue')))
+fig_working.add_trace(go.Scatter(x=rentals_non_working_days_2011['mnth'], y=rentals_non_working_days_2011['cnt'], mode='lines+markers', name='Non-working Days', line=dict(color='red')))
+fig_working.update_layout(title='Bike Rental Patterns on Working Days and Non-working Days (Year 2011)', xaxis_title='Month', yaxis_title='Average Rental Counts', xaxis=dict(tickmode='linear', tick0=1, dtick=1))
 st.plotly_chart(fig_working)
 
 # Relationship between Rental Counts and Weather Condition
