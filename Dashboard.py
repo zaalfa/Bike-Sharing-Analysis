@@ -5,13 +5,11 @@ import streamlit as st
 import plotly.express as px
 from babel.numbers import format_currency
 
-sns.set(style='dark')
-
 # Load Data
 day_df = pd.read_csv("Bike-sharing-dataset/day.csv")
 hour_df = pd.read_csv("Bike-sharing-dataset/hour.csv")
 
-# Side Bar
+# Sidebar
 st.sidebar.header('Bike Sharing Analysis')
 st.sidebar.markdown('By T. Zalfa Ramadhani')
 st.sidebar.markdown('---')
@@ -19,106 +17,62 @@ st.sidebar.markdown('---')
 # Main
 st.header(':sparkles: Bike Sharing Analysis :sparkles:')
 
-
 # Hourly Rentals
 st.subheader('Hourly Rentals')
-hourly_cnt = hour_df.groupby('hr')['cnt'].sum()
+hourly_cnt = hour_df.groupby('hr')['cnt'].sum().reset_index()
 
-sns.set_palette("pastel")
-fig, ax = plt.subplots()
-sns.lineplot(x=hourly_cnt.index, y=hourly_cnt.values, marker='o', color='blue', linewidth=1.5, ax=ax)
-ax.fill_between(hourly_cnt.index, hourly_cnt.values, alpha=0.5)  
-
-ax.set_xlabel('Hour')
-ax.set_ylabel('Count')
-ax.set_title('Distribution of Bike Rentals by Hour')
-ax.set_xticks(range(24)) 
-ax.set_ylim(0, hourly_cnt.max() + 5)
-st.pyplot(fig)
+fig_hourly = px.line(hourly_cnt, x='hr', y='cnt', title='Distribution of Bike Rentals by Hour', labels={'cnt': 'Count', 'hr': 'Hour'})
+st.plotly_chart(fig_hourly)
 
 # Monthly Rentals
 st.subheader('Monthly Rentals')
-month_cnt = day_df.groupby('mnth')['cnt'].sum()
+month_cnt = day_df.groupby('mnth')['cnt'].sum().reset_index()
 
-sns.set_palette("pastel")
-fig, ax = plt.subplots()
-sns.lineplot(x=month_cnt.index, y=month_cnt.values, marker='o', color='blue', linewidth=1.5)
-ax.fill_between(month_cnt.index, month_cnt.values, alpha=0.5)
-
-ax.set_xlabel('Month')
-ax.set_ylabel('Count')
-ax.set_title('Distribution of Bike Rentals by Month')
-ax.set_xticks(range(1, 13))
-ax.set_ylim(400, month_cnt.max() + 5)
-
-st.pyplot(plt)
+fig_monthly = px.line(month_cnt, x='mnth', y='cnt', title='Distribution of Bike Rentals by Month', labels={'cnt': 'Count', 'mnth': 'Month'})
+fig_monthly.update_xaxes(tickvals=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+st.plotly_chart(fig_monthly)
 
 # Yearly Rentals
 st.subheader('Yearly Rentals')
 yearly_cnt = hour_df.groupby('yr')['cnt'].sum().reset_index()
 
-sns.set_palette("pastel")
-fig, ax = plt.subplots()
-sns.barplot(x='yr', y='cnt', data=yearly_cnt, ax=ax)
-ax.set_xlabel('Year')
-ax.set_ylabel('Count')
-ax.set_title('Distribution of Bike Rentals by Month')
-ax.set_xticklabels(['2011', '2012'])
-st.pyplot(fig)
+fig_yearly = px.bar(yearly_cnt, x='yr', y='cnt', title='Distribution of Bike Rentals by Year', labels={'cnt': 'Count', 'yr': 'Year'})
+fig_yearly.update_xaxes(tickvals=[0, 1], ticktext=['2011', '2012'])
+st.plotly_chart(fig_yearly)
 
 # Seasonal Rentals
 st.subheader('Seasonal Rentals')
 season_cnt = hour_df.groupby('season')['cnt'].sum().reset_index()
 
-sns.set_palette("pastel")
-fig, ax = plt.subplots()
-sns.barplot(x='season', y='cnt', data=season_cnt, ax=ax)
-ax.set_xlabel('Musim')
-ax.set_ylabel('Total Rentals')
-ax.set_title('Distribusi Penyewa Berdasarkan Musim')
-ax.set_xticklabels(['Spring', 'Summer', 'Fall', 'Winter'])
-st.pyplot(fig)
+fig_seasonal = px.bar(season_cnt, x='season', y='cnt', title='Distribution of Bike Rentals by Season', labels={'cnt': 'Total Rentals', 'season': 'Season'})
+fig_seasonal.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Spring', 'Summer', 'Fall', 'Winter'])
+st.plotly_chart(fig_seasonal)
 
 # Total Rentals vs Temperature
 st.subheader('Total Rentals vs Temperature')
 
-fig, ax = plt.subplots()
-sns.scatterplot(x='temp', y='cnt', data=hour_df, ax=ax)
-ax.set_xlabel('Temperature (Celsius)')
-ax.set_ylabel('Counts')
-ax.set_title('Hubungan antara Jumlah Penyewa dan Temperatur')
-st.pyplot(fig)
+fig_temp = px.scatter(hour_df, x='temp', y='cnt', title='Relationship between Total Rentals and Temperature', labels={'temp': 'Temperature (Celsius)', 'cnt': 'Counts'})
+st.plotly_chart(fig_temp)
 
-#1st Question
+# Bike Rental Patterns on Working Days and Non-working Days (Year 2011)
 st.subheader('Bike Rental Patterns on Working Days and Non-working Days (Year 2011)')
 day_df_2011 = day_df[day_df['yr'] == 0]
 
 working_days_2011 = day_df_2011[day_df_2011['workingday'] == 1]
 non_working_days_2011 = day_df_2011[day_df_2011['workingday'] == 0]
 
-rentals_working_days_2011 = working_days_2011.groupby('mnth')['cnt'].mean()
-rentals_non_working_days_2011 = non_working_days_2011.groupby('mnth')['cnt'].mean()
+rentals_working_days_2011 = working_days_2011.groupby('mnth')['cnt'].mean().reset_index()
+rentals_non_working_days_2011 = non_working_days_2011.groupby('mnth')['cnt'].mean().reset_index()
 
-plt.figure(figsize=(12, 6))
-plt.plot(rentals_working_days_2011.index, rentals_working_days_2011.values, label='Working Days', color='blue')
-plt.plot(rentals_non_working_days_2011.index, rentals_non_working_days_2011.values, label='Non-working Days', color='red')
-plt.xlabel('Month')
-plt.ylabel('Average Rental Counts')
-plt.title('Bike Rental Patterns on Working Days and Non-working Days (Year 2011)')
-plt.legend()
-plt.xticks(range(1, 13))
-plt.tight_layout()
-st.pyplot(plt)
+fig_working = px.line(rentals_working_days_2011, x='mnth', y='cnt', title='Working Days vs Non-working Days (2011)', labels={'cnt': 'Average Rental Counts', 'mnth': 'Month'})
+fig_working.add_scatter(x=rentals_non_working_days_2011['mnth'], y=rentals_non_working_days_2011['cnt'], mode='lines', name='Non-working Days')
+fig_working.update_layout(xaxis_title='Month', yaxis_title='Average Rental Counts')
+st.plotly_chart(fig_working)
 
-#2st Question
+# Relationship between Rental Counts and Weather Condition
 st.subheader('Relationship between Rental Counts and Weather Condition')
 weather_counts = hour_df.groupby('weathersit')['cnt'].sum().reset_index()
 
-plt.figure(figsize=(8, 6))
-sns.barplot(x='weathersit', y='cnt', data=weather_counts, color='blue')
-plt.xlabel('Weather Condition')
-plt.ylabel('Total Rentals')
-plt.title('Relationship between Rental Counts and Weather Condition')
-plt.xticks(ticks=[0, 1, 2, 3], labels=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
-plt.tight_layout()
-st.pyplot(plt)
+fig_weather = px.bar(weather_counts, x='weathersit', y='cnt', title='Relationship between Rental Counts and Weather Condition', labels={'cnt': 'Total Rentals', 'weathersit': 'Weather Condition'})
+fig_weather.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
+st.plotly_chart(fig_weather)
