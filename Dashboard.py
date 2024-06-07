@@ -39,6 +39,10 @@ yearly_cnt = hour_df.groupby('yr')['cnt'].sum().reset_index()
 
 fig_yearly = px.bar(yearly_cnt, x='yr', y='cnt', title='Distribution of Bike Rentals by Year', labels={'cnt': 'Count', 'yr': 'Year'})
 fig_yearly.update_xaxes(tickvals=[0, 1], ticktext=['2011', '2012'])
+
+max_value_index = yearly_cnt['cnt'].idxmax()
+fig_yearly.data[0].marker.color = ['rgba(255, 0, 0, 1)' if i == max_value_index else 'rgba(0, 0, 255, 0.5)' for i in range(len(yearly_cnt))]
+
 st.plotly_chart(fig_yearly)
 
 # Seasonal Rentals
@@ -47,6 +51,11 @@ season_cnt = hour_df.groupby('season')['cnt'].sum().reset_index()
 
 fig_seasonal = px.bar(season_cnt, x='season', y='cnt', title='Distribution of Bike Rentals by Season', labels={'cnt': 'Total Rentals', 'season': 'Season'})
 fig_seasonal.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Spring', 'Summer', 'Fall', 'Winter'])
+
+max_value_index_season = season_cnt['cnt'].idxmax()
+fig_seasonal.data[0].marker.color = ['rgba(255, 0, 0, 1)' if i == max_value_index_season else 'rgba(0, 0, 255, 0.5)' for i in range(len(season_cnt))]
+st.plotly_chart(fig_seasonal)
+
 st.plotly_chart(fig_seasonal)
 
 # Total Rentals vs Temperature
@@ -78,4 +87,8 @@ weather_counts = hour_df.groupby('weathersit')['cnt'].sum().reset_index()
 
 fig_weather = px.bar(weather_counts, x='weathersit', y='cnt', title='Relationship between Rental Counts and Weather Condition', labels={'cnt': 'Total Rentals', 'weathersit': 'Weather Condition'})
 fig_weather.update_xaxes(tickvals=[1, 2, 3, 4], ticktext=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
+
+max_value_index = weather_counts['cnt'].idxmax()
+fig_weather.data[0].marker.color[max_value_index] = 'rgba(255, 0, 0, 1)'
+
 st.plotly_chart(fig_weather)
